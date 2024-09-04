@@ -97,6 +97,9 @@ class UsedCodeVisitor extends RecursiveAstVisitor<void> {
 
   @override
   void visitNamedType(NamedType node) {
+    if (_isUsedInWidgetStateClassDeclaration(node)) {
+      return;
+    }
     _recordPrefixedElement(node.importPrefix, node.element);
     super.visitNamedType(node);
   }
@@ -243,5 +246,15 @@ class UsedCodeVisitor extends RecursiveAstVisitor<void> {
 
     return grandGrandParent is NamedType &&
         isWidgetStateOrSubclass(grandGrandParent.type);
+  }
+
+  bool _isUsedInWidgetStateClassDeclaration(NamedType namedType) {
+    final parent = namedType.parent;
+    if (parent is TypeArgumentList) {
+      final grandParent = parent.parent;
+      return grandParent is NamedType &&
+          isWidgetStateOrSubclass(grandParent.type);
+    }
+    return false;
   }
 }
