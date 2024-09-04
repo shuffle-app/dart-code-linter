@@ -1,6 +1,9 @@
 # Changelog
+## 1.1.3
+- Fix some test
+- Revert `analyzer` ^6.0.0 to ^5.14.0
 ## 1.1.2
-- append new presset `analysis_options.1.0.0.yaml`
+- Append new presset `analysis_options.1.0.0.yaml`
 ## 1.1.1
 - Rename common rules to dart rules
 ## 1.1.0
