@@ -1,7 +1,9 @@
 # Changelog
-## 1.1.3
+## 1.1.4
 - Fix some test
 - Revert `analyzer` ^6.0.0 to ^5.14.0
+## 1.1.3
+- Fix some test
 ## 1.1.2
 - Append new presset `analysis_options.1.0.0.yaml`
 ## 1.1.1
