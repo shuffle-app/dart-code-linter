@@ -14,9 +14,6 @@ Dart Code Linter (DCL) is a powerful toolkit designed to enhance your developmen
 
 ```sh
 $ dart pub add --dev dart_code_linter
-
-# or for a Flutter package
-$ flutter pub add --dev dart_code_linter
 ```
 
 ## Basic configuration
@@ -119,9 +116,6 @@ Reports code metrics, rules and anti-patterns violations. To execute the command
 
 ```sh
 $ dart run dart_code_linter:metrics analyze lib
-
-# or for a Flutter package
-$ flutter pub run dart_code_linter:metrics analyze lib
 ```
 
 It will produce a result in one of the format:
@@ -140,9 +134,6 @@ Checks unnecessary nullable parameters in functions, methods, constructors. To e
 
 ```sh
 $ dart run dart_code_linter:metrics check-unnecessary-nullable lib
-
-# or for a Flutter package
-$ flutter pub run dart_code_linter:metrics check-unnecessary-nullable lib
 ```
 
 It will produce a result in one of the format:
@@ -158,9 +149,6 @@ Checks unused `*.dart` files. To execute the command, run
 
 ```sh
 $ dart run dart_code_linter:metrics check-unused-files lib
-
-# or for a Flutter package
-$ flutter pub run dart_code_linter:metrics check-unused-files lib
 ```
 
 It will produce a result in one of the format:
@@ -192,9 +180,6 @@ To execute the command, run
 
 ```sh
 $ dart run dart_code_linter:metrics check-unused-l10n lib
-
-# or for a Flutter package
-$ flutter pub run dart_code_linter:metrics check-unused-l10n lib
 ```
 
 It will produce a result in one of the format:
@@ -209,9 +194,6 @@ Checks unused code in `*.dart` files. To execute the command, run
 
 ```sh
 $ dart run dart_code_linter:metrics check-unused-code lib
-
-# or for a Flutter package
-$ flutter pub run dart_code_linter:metrics check-unused-code lib
 ```
 
 It will produce a result in one of the format:
