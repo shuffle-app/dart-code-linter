@@ -1,6 +1,4 @@
 import 'dart:io';
-
-import 'package:collection/collection.dart';
 import 'package:path/path.dart';
 import 'package:source_span/source_span.dart';
 import 'package:yaml/yaml.dart';
@@ -79,7 +77,7 @@ class LintAnalysisOptionsValidator {
 
               return null;
             })
-            .whereNotNull()
+            .nonNulls
             .toList();
       }
     }
