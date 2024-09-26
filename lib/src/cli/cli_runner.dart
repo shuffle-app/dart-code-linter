@@ -94,7 +94,7 @@ class CliRunner extends CommandRunner<void> {
       final isUpToDate = packageVersion == latestVersion;
       if (!isUpToDate && latestVersion != null) {
         final changelogLink =
-            'https://github.com/bancolombia/dart-code-linter/releases/tag/$latestVersion';
+            'https://github.com/bancolombia/dart-code-linter/releases/tag/v$latestVersion';
         _logger.updateAvailable(packageVersion, latestVersion, changelogLink);
       }
       // ignore: avoid_catches_without_on_clauses
