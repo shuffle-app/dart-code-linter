@@ -1,4 +1,7 @@
 # Changelog
+## 1.1.5
+- Removed deprecated fields in analysis options and collection method
+- Fix changelog URL for update available warning
 ## 1.1.4
 - Fix some test
 - Revert `analyzer` ^6.0.0 to ^5.14.0
