@@ -44,6 +44,7 @@ import 'rules_list/list_all_equatable_fields/list_all_equatable_fields_rule.dart
 import 'rules_list/member_ordering/member_ordering_rule.dart';
 import 'rules_list/missing_test_assertion/missing_test_assertion_rule.dart';
 import 'rules_list/newline_before_return/newline_before_return_rule.dart';
+import 'rules_list/no_blank_line_before_single_return/no_blank_line_before_single_return_rule.dart';
 import 'rules_list/no_boolean_literal_compare/no_boolean_literal_compare_rule.dart';
 import 'rules_list/no_empty_block/no_empty_block_rule.dart';
 import 'rules_list/no_equal_arguments/no_equal_arguments_rule.dart';
@@ -130,6 +131,7 @@ final _implementedRules = <String, Rule Function(Map<String, Object>)>{
   MemberOrderingRule.ruleId: MemberOrderingRule.new,
   MissingTestAssertionRule.ruleId: MissingTestAssertionRule.new,
   NewlineBeforeReturnRule.ruleId: NewlineBeforeReturnRule.new,
+  NoBlankLineBeforeSingleReturnRule.ruleId: NoBlankLineBeforeSingleReturnRule.new,
   NoBooleanLiteralCompareRule.ruleId: NoBooleanLiteralCompareRule.new,
   NoEmptyBlockRule.ruleId: NoEmptyBlockRule.new,
   NoEqualArgumentsRule.ruleId: NoEqualArgumentsRule.new,
