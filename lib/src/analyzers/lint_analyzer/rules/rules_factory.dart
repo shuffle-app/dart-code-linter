@@ -63,6 +63,7 @@ import 'rules_list/prefer_define_hero_tag/prefer_define_hero_tag_rule.dart';
 import 'rules_list/prefer_enums_by_name/prefer_enums_by_name_rule.dart';
 import 'rules_list/prefer_extracting_callbacks/prefer_extracting_callbacks_rule.dart';
 import 'rules_list/prefer_first/prefer_first_rule.dart';
+import 'rules_list/prefer_first_or_null/prefer_first_or_null_rule.dart';
 import 'rules_list/prefer_immediate_return/prefer_immediate_return_rule.dart';
 import 'rules_list/prefer_intl_name/prefer_intl_name_rule.dart';
 import 'rules_list/prefer_iterable_of/prefer_iterable_of_rule.dart';
@@ -132,6 +133,7 @@ final _implementedRules = <String, Rule Function(Map<String, Object>)>{
   MissingTestAssertionRule.ruleId: MissingTestAssertionRule.new,
   NewlineBeforeReturnRule.ruleId: NewlineBeforeReturnRule.new,
   NoBlankLineBeforeSingleReturnRule.ruleId: NoBlankLineBeforeSingleReturnRule.new,
+  PreferFirstOrNullRule.ruleId: PreferFirstOrNullRule.new,
   NoBooleanLiteralCompareRule.ruleId: NoBooleanLiteralCompareRule.new,
   NoEmptyBlockRule.ruleId: NoEmptyBlockRule.new,
   NoEqualArgumentsRule.ruleId: NoEqualArgumentsRule.new,

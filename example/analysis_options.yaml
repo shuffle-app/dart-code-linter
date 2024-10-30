@@ -52,6 +52,7 @@ dart_code_linter:
     - avoid-unnecessary-type-casts
     - avoid-unused-parameters
     - newline-before-return
+    - prefer-first-or-null
     - no-blank-line-before-single-return
     - no-boolean-literal-compare
     - no-empty-block

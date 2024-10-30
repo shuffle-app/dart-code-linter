@@ -23,7 +23,7 @@ void main() {
       final unit = await RuleTestHelper.resolveFromFile(_examplePath);
       final issues = NoBlankLineBeforeSingleReturnRule().check(unit);
 
-      List<int> startLines = [79, 85, 92, 100, 106, 113, 122];
+      final startLines = <int>[79, 85, 92, 100, 106, 113, 122];
 
       RuleTestHelper.verifyIssues(
         issues: issues,
