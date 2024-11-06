@@ -71,6 +71,7 @@ import 'rules_list/prefer_last/prefer_last_rule.dart';
 import 'rules_list/prefer_match_file_name/prefer_match_file_name_rule.dart';
 import 'rules_list/prefer_moving_to_variable/prefer_moving_to_variable_rule.dart';
 import 'rules_list/prefer_provide_intl_description/prefer_provide_intl_description_rule.dart';
+import 'rules_list/prefer_single_quotes/prefer_single_qoutes.dart';
 import 'rules_list/prefer_single_widget_per_file/prefer_single_widget_per_file_rule.dart';
 import 'rules_list/prefer_static_class/prefer_static_class_rule.dart';
 import 'rules_list/prefer_trailing_comma/prefer_trailing_comma_rule.dart';
@@ -134,6 +135,7 @@ final _implementedRules = <String, Rule Function(Map<String, Object>)>{
   NewlineBeforeReturnRule.ruleId: NewlineBeforeReturnRule.new,
   NoBlankLineBeforeSingleReturnRule.ruleId: NoBlankLineBeforeSingleReturnRule.new,
   PreferFirstOrNullRule.ruleId: PreferFirstOrNullRule.new,
+  PreferSingleQuotesRule.ruleId: PreferSingleQuotesRule.new,
   NoBooleanLiteralCompareRule.ruleId: NoBooleanLiteralCompareRule.new,
   NoEmptyBlockRule.ruleId: NoEmptyBlockRule.new,
   NoEqualArgumentsRule.ruleId: NoEqualArgumentsRule.new,
