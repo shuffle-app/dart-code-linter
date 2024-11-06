@@ -18,7 +18,7 @@ part 'visitor.dart';
 
 class PreferFirstOrNullRule extends DartRule {
   static const ruleId = 'prefer-first-or-null';
-  static const warningMessage = 'Use first instead of accessing the element at zero index or using first.';
+  static const warningMessage = 'Use firstOrNull instead of accessing the element at zero index or using first.';
   static const replaceComment = "Replace with 'firstOrNull'.";
 
   PreferFirstOrNullRule([Map<String, Object> config = const {}])
