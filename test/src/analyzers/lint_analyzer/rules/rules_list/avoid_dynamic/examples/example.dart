@@ -41,3 +41,11 @@ class Generic extends BaseClass<dynamic> {
 
   final myMap = <String, dynamic>{};
 }
+
+extension type Asset(String path) { }
+
+class TestClass {
+  const TestClass({required this.asset});
+
+  final Asset asset;
+}
