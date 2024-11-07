@@ -10,6 +10,7 @@ import 'commands/check_unnecessary_nullable_command.dart';
 import 'commands/check_unused_code_command.dart';
 import 'commands/check_unused_files_command.dart';
 import 'commands/check_unused_l10n_command.dart';
+import 'commands/fix_lints_command.dart';
 import 'models/flag_names.dart';
 
 /// Represents a cli runner responsible
@@ -29,6 +30,7 @@ class CliRunner extends CommandRunner<void> {
       CheckUnusedL10nCommand(_logger),
       CheckUnusedCodeCommand(_logger),
       CheckUnnecessaryNullableCommand(_logger),
+      FixCommand(_logger),
     ].forEach(addCommand);
 
     _usesVersionOption();

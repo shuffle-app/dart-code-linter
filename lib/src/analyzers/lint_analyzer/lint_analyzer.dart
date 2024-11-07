@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:analyzer/dart/analysis/analysis_context.dart';
+import 'package:analyzer/dart/analysis/analysis_context_collection.dart';
 import 'package:analyzer/dart/analysis/results.dart';
 import 'package:path/path.dart';
 
@@ -77,43 +78,21 @@ class LintAnalyzer {
     LintConfig config, {
     String? sdkPath,
   }) async {
-    final collection =
-        createAnalysisContextCollection(folders, rootFolder, sdkPath);
-
+    final collection = createAnalysisContextCollection(folders, rootFolder, sdkPath);
     final analyzerResult = <LintFileReport>[];
 
     for (final context in collection.contexts) {
-      final lintAnalysisConfig =
-          _getAnalysisConfig(context, rootFolder, config);
-
-      final report = LintAnalysisOptionsValidator.validateOptions(
-        lintAnalysisConfig,
+      final (lintAnalysisConfig, analyzedFiles, report) = prepareLintAnalysis(
+        context,
+        folders,
         rootFolder,
+        config,
+        collection,
       );
+
       if (report != null) {
         analyzerResult.add(report);
       }
-
-      if (config.shouldPrintConfig) {
-        _logger?.printConfig(lintAnalysisConfig.toJson());
-      }
-
-      final filePaths = getFilePaths(
-        folders,
-        context,
-        rootFolder,
-        lintAnalysisConfig.globalExcludes,
-      );
-
-      final analyzedFiles =
-          filePaths.intersection(context.contextRoot.analyzedFiles().toSet());
-
-      final contextsLength = collection.contexts.length;
-      final filesLength = analyzedFiles.length;
-      final updateMessage = contextsLength == 1
-          ? 'Analyzing $filesLength file(s)'
-          : 'Analyzing ${collection.contexts.indexOf(context) + 1}/$contextsLength contexts with $filesLength file(s)';
-      _logger?.progress.update(updateMessage);
 
       for (final filePath in analyzedFiles) {
         _logger?.infoVerbose('Analyzing $filePath');
@@ -131,7 +110,6 @@ class LintAnalyzer {
             _logger?.infoVerbose(
               'Analysis result: found ${result.issues.length} issues',
             );
-
             analyzerResult.add(result);
           }
         }
@@ -139,6 +117,130 @@ class LintAnalyzer {
     }
 
     return analyzerResult;
+  }
+
+  Future<void> runCliFix(
+    Iterable<String> folders,
+    String rootFolder,
+    LintConfig config, {
+    String? sdkPath,
+  }) async {
+    final collection = createAnalysisContextCollection(folders, rootFolder, sdkPath);
+
+    for (final context in collection.contexts) {
+      final (lintAnalysisConfig, analyzedFiles, _) = prepareLintAnalysis(
+        context,
+        folders,
+        rootFolder,
+        config,
+        collection,
+      );
+
+      for (final filePath in analyzedFiles) {
+        _logger?.infoVerbose('Fixing $filePath\n');
+
+        final unit = await context.currentSession.getResolvedUnit(filePath);
+        if (unit is ResolvedUnitResult) {
+          final (issuesNo, fixesNo) = _analyzeAndFixFile(
+            unit,
+            lintAnalysisConfig,
+            rootFolder,
+            filePath: filePath,
+          );
+
+          if (issuesNo != 0) {
+            _logger?.write(
+              '\nFix result: fixed $fixesNo out of $issuesNo issues\n',
+            );
+          } else {
+            _logger?.infoVerbose(
+              'No issues found',
+            );
+          }
+        }
+      }
+    }
+
+    return;
+  }
+
+  (
+    LintAnalysisConfig lintAnalysisConfig,
+    Set<String> analyzedFiles,
+    LintFileReport? report,
+  ) prepareLintAnalysis(
+    AnalysisContext context,
+    Iterable<String> folders,
+    String rootFolder,
+    LintConfig config,
+    AnalysisContextCollection collection,
+  ) {
+    final lintAnalysisConfig = _getAnalysisConfig(context, rootFolder, config);
+    final report = LintAnalysisOptionsValidator.validateOptions(
+      lintAnalysisConfig,
+      rootFolder,
+    );
+
+    if (config.shouldPrintConfig) {
+      _logger?.printConfig(lintAnalysisConfig.toJson());
+    }
+
+    final filePaths = getFilePaths(
+      folders,
+      context,
+      rootFolder,
+      lintAnalysisConfig.globalExcludes,
+    );
+    final analyzedFiles = filePaths.intersection(context.contextRoot.analyzedFiles().toSet());
+
+    final contextsLength = collection.contexts.length;
+    final filesLength = analyzedFiles.length;
+    final updateMessage = contextsLength == 1
+        ? 'Processing $filesLength file(s)'
+        : 'Processing ${collection.contexts.indexOf(context) + 1}/$contextsLength contexts with $filesLength file(s)';
+    _logger?.progress.update(updateMessage);
+
+    return (lintAnalysisConfig, analyzedFiles, report);
+  }
+
+  (int issuesNo, int fixesNo) _analyzeAndFixFile(
+    ResolvedUnitResult unit,
+    LintAnalysisConfig config,
+    String rootFolder, {
+    required String filePath,
+  }) {
+    final result = _analyzeFile(unit, config, rootFolder, filePath: filePath);
+
+    if (result == null || result.issues.isEmpty) {
+      return (0, 0);
+    }
+
+    final originalContent = StringBuffer(unit.content);
+    var fixedContent = originalContent.toString();
+    final fixedIssues = <Issue>[];
+
+    for (final issue in result.issues) {
+      final fix = issue.suggestion;
+
+      if (fix != null) {
+        fixedContent = fixedContent.replaceRange(
+          issue.location.start.offset,
+          issue.location.end.offset,
+          fix.replacement,
+        );
+
+        fixedIssues.add(issue);
+      }
+    }
+
+    _applyFixesToFile(fixedContent, filePath);
+
+    return (result.issues.length, fixedIssues.length);
+  }
+
+  Future<void> _applyFixesToFile(String fixedContent, String filePath) async {
+    final file = File(filePath);
+    await file.writeAsString(fixedContent);
   }
 
   Iterable<SummaryLintReportRecord<Object>> getSummary(
@@ -164,14 +266,12 @@ class LintAnalyzer {
         SummaryLintReportRecord<num>(
           title: 'Average Cyclomatic Number per line of code',
           value: averageCYCLO(records),
-          violations:
-              metricViolations(records, CyclomaticComplexityMetric.metricId),
+          violations: metricViolations(records, CyclomaticComplexityMetric.metricId),
         ),
         SummaryLintReportRecord<int>(
           title: 'Average Source Lines of Code per method',
           value: averageSLOC(records),
-          violations:
-              metricViolations(records, SourceLinesOfCodeMetric.metricId),
+          violations: metricViolations(records, SourceLinesOfCodeMetric.metricId),
         ),
         SummaryLintReportRecord<String>(
           title: 'Total tech debt',
@@ -184,11 +284,9 @@ class LintAnalyzer {
     String rootFolder,
     LintConfig config,
   ) {
-    final analysisOptions = analysisOptionsFromContext(context) ??
-        analysisOptionsFromFilePath(rootFolder, context);
+    final analysisOptions = analysisOptionsFromContext(context) ?? analysisOptionsFromFilePath(rootFolder, context);
 
-    final contextConfig =
-        ConfigBuilder.getLintConfigFromOptions(analysisOptions).merge(config);
+    final contextConfig = ConfigBuilder.getLintConfigFromOptions(analysisOptions).merge(config);
 
     return ConfigBuilder.getLintAnalysisConfig(
       contextConfig,
@@ -231,8 +329,7 @@ class LintAnalyzer {
 
       final classMetrics = _checkClassMetrics(visitor, internalResult, config);
       final fileMetrics = _checkFileMetrics(visitor, internalResult, config);
-      final functionMetrics =
-          _checkFunctionMetrics(visitor, internalResult, config);
+      final functionMetrics = _checkFunctionMetrics(visitor, internalResult, config);
       final antiPatterns = _checkOnAntiPatterns(
         ignores,
         internalResult,
@@ -280,11 +377,10 @@ class LintAnalyzer {
                 createAbsolutePatterns(rule.excludes, config.rootFolder),
               ))
           .expand(
-            (rule) =>
-                rule.check(source).where((issue) => !ignores.isSuppressedAt(
-                      issue.ruleId,
-                      issue.location.start.line,
-                    )),
+            (rule) => rule.check(source).where((issue) => !ignores.isSuppressedAt(
+                  issue.ruleId,
+                  issue.location.start.line,
+                )),
           )
           .toList();
 
@@ -302,12 +398,10 @@ class LintAnalyzer {
                 source.path,
                 createAbsolutePatterns(pattern.excludes, config.rootFolder),
               ))
-          .expand((pattern) => pattern
-              .check(source, classMetrics, functionMetrics)
-              .where((issue) => !ignores.isSuppressedAt(
-                    issue.ruleId,
-                    issue.location.start.line,
-                  )))
+          .expand((pattern) => pattern.check(source, classMetrics, functionMetrics).where((issue) => !ignores.isSuppressedAt(
+                issue.ruleId,
+                issue.location.start.line,
+              )))
           .toList();
 
   Map<ScopedClassDeclaration, Report> _checkClassMetrics(
@@ -424,7 +518,5 @@ class LintAnalyzer {
   }
 
   bool _isSupported(FileResult result) =>
-      result.path.endsWith('.dart') &&
-      !result.path.endsWith('.g.dart') &&
-      !result.path.endsWith('.freezed.dart');
+      result.path.endsWith('.dart') && !result.path.endsWith('.g.dart') && !result.path.endsWith('.freezed.dart');
 }

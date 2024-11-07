@@ -30,4 +30,12 @@ class ParsedArguments {
               metric.id: argResults[metric.id] as Object,
         },
       );
+
+  factory ParsedArguments.fromArgsNoMetrics(ArgResults argResults) => ParsedArguments(
+        excludePath: argResults[FlagNames.exclude] as String,
+        rootFolder: argResults[FlagNames.rootFolder] as String,
+        jsonReportPath: argResults[FlagNames.jsonReportPath] as String?,
+        shouldPrintConfig: argResults[FlagNames.printConfig] as bool,
+        metricsConfig: {},
+      );
 }
