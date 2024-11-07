@@ -9,7 +9,9 @@ class _Visitor extends RecursiveAstVisitor<void> {
   void visitSimpleIdentifier(SimpleIdentifier node) {
     final parent = node.parent;
     // ignore: deprecated_member_use
-    if (parent is NamedType && (parent.type?.isDynamic ?? false)) {
+    if (parent is NamedType &&
+        (parent.type?.isDynamic ?? false) &&
+        parent.name2.toString() == 'dynamic') {
       final grandParent = node.parent?.parent;
       if (grandParent != null && !_isWithinMap(grandParent)) {
         _nodes.add(grandParent);
