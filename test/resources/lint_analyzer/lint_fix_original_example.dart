@@ -3,6 +3,6 @@ class ExcludeExample {
   void test() {
     final value = <int>[1, 2, 3];
 
-    print(value.firstOrNull);
+    print(value.first);
   }
 }
