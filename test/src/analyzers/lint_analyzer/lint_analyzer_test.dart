@@ -5,6 +5,7 @@ import 'package:dart_code_linter/src/analyzers/lint_analyzer/lint_config.dart';
 import 'package:dart_code_linter/src/analyzers/lint_analyzer/metrics/models/metric_value_level.dart';
 import 'package:dart_code_linter/src/analyzers/lint_analyzer/models/lint_file_report.dart';
 import 'package:dart_code_linter/src/analyzers/lint_analyzer/models/report.dart';
+import 'package:dart_code_linter/src/analyzers/lint_analyzer/rules/rules_list/prefer_first_or_null/prefer_first_or_null_rule.dart';
 import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
 
@@ -29,7 +30,7 @@ void main() {
           config,
         );
 
-        expect(result, hasLength(2));
+        expect(result, hasLength(4));
       });
 
       test('should analyze only one file', () async {
@@ -43,7 +44,7 @@ void main() {
           config,
         );
 
-        expect(result, hasLength(1));
+        expect(result, hasLength(3));
       });
 
       test('should report default code metrics', () async {
@@ -55,11 +56,7 @@ void main() {
           config,
         );
 
-        final report =
-            reportForFile(result, 'lint_analyzer_exclude_example.dart')
-                .functions
-                .values
-                .first;
+        final report = reportForFile(result, 'lint_analyzer_exclude_example.dart').functions.values.first;
         final metrics = {for (final m in report.metrics) m.metricsId: m.level};
 
         expect(metrics, {
@@ -82,11 +79,7 @@ void main() {
           config,
         );
 
-        final report =
-            reportForFile(result, 'lint_analyzer_exclude_example.dart')
-                .functions
-                .values
-                .first;
+        final report = reportForFile(result, 'lint_analyzer_exclude_example.dart').functions.values.first;
         final metrics = {for (final m in report.metrics) m.metricsId: m.level};
 
         expect(metrics, {
@@ -111,10 +104,7 @@ void main() {
           config,
         );
 
-        final report =
-            reportForFile(result, 'lint_analyzer_exclude_example.dart')
-                .functions
-                .values;
+        final report = reportForFile(result, 'lint_analyzer_exclude_example.dart').functions.values;
 
         expect(report, isEmpty);
       });
@@ -128,8 +118,7 @@ void main() {
           config,
         );
 
-        final issues =
-            reportForFile(result, 'lint_analyzer_exclude_example.dart').issues;
+        final issues = reportForFile(result, 'lint_analyzer_exclude_example.dart').issues;
 
         expect(
           issues.map((issue) => issue.ruleId),
@@ -149,8 +138,7 @@ void main() {
           config,
         );
 
-        final report =
-            reportForFile(result, 'lint_analyzer_exclude_example.dart').issues;
+        final report = reportForFile(result, 'lint_analyzer_exclude_example.dart').issues;
         expect(report, isEmpty);
       });
 
@@ -213,6 +201,67 @@ void main() {
           result.firstWhere((r) => r.title == 'Total tech debt').value,
           equals('10 USD'),
         );
+      });
+
+      test('should not fix files', () async {
+        final basePath = '${Directory.current.path}/test/resources/lint_analyzer';
+        final fixedExamplePath = '$basePath/lint_fix_fixed_example.dart';
+
+        final originalFixedExampleContent = await File(fixedExamplePath).readAsString();
+
+        final config = _createConfig(
+          excludePatterns: [
+            'test/resources/lint_analyzer/lint_analyzer_example.dart',
+            'test/resources/lint_analyzer/lint_analyzer_exclude_example.dart',
+            'test/resources/lint_analyzer/lint_fix_original_example.dart',
+          ],
+          rules: {
+            PreferFirstOrNullRule.ruleId: {},
+          },
+        );
+
+        await analyzer.runCliFix(
+          folders,
+          rootDirectory,
+          config,
+        );
+
+        final fixedExampleContent = await File(fixedExamplePath).readAsString();
+
+        expect(
+          originalFixedExampleContent,
+          equals(fixedExampleContent),
+        );
+      });
+
+      test('should fix files', () async {
+        final basePath = '${Directory.current.path}/test/resources/lint_analyzer';
+        final originalExamplePath = '$basePath/lint_fix_original_example.dart';
+        final fixedExamplePath = '$basePath/lint_fix_fixed_example.dart';
+
+        final originalExampleContent = await File(originalExamplePath).readAsString();
+
+        final config = _createConfig(
+          rules: {
+            PreferFirstOrNullRule.ruleId: {},
+          },
+        );
+
+        await analyzer.runCliFix(
+          folders,
+          rootDirectory,
+          config,
+        );
+
+        final modifiedExampleContent = await File(originalExamplePath).readAsString();
+        final fixedExampleContent = await File(fixedExamplePath).readAsString();
+
+        expect(
+          modifiedExampleContent,
+          equals(fixedExampleContent),
+        );
+
+        await File(originalExamplePath).writeAsString(originalExampleContent);
       });
     },
     testOn: 'posix',

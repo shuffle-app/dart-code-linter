@@ -47,8 +47,44 @@ class FixCommand extends BaseCommand {
   }
 
   void _addFlags() {
+    _usesReporterOption();
     addCommonFlags();
     _usesExitOption();
+  }
+
+  void _usesReporterOption() {
+    argParser
+      ..addSeparator('')
+      ..addOption(
+        FlagNames.reporter,
+        abbr: 'r',
+        help: 'The format of the output of the analysis.',
+        valueHelp: FlagNames.consoleReporter,
+        allowed: [
+          FlagNames.consoleReporter,
+          FlagNames.consoleVerboseReporter,
+          FlagNames.checkstyleReporter,
+          FlagNames.codeClimateReporter,
+          FlagNames.githubReporter,
+          FlagNames.gitlabCodeClimateReporter,
+          FlagNames.htmlReporter,
+          FlagNames.jsonReporter,
+        ],
+        defaultsTo: FlagNames.consoleReporter,
+      )
+      ..addOption(
+        FlagNames.reportFolder,
+        abbr: 'o',
+        help: 'Write HTML output to OUTPUT.',
+        valueHelp: 'OUTPUT',
+        defaultsTo: 'metrics',
+      )
+      ..addOption(
+        FlagNames.jsonReportPath,
+        help: 'Path to the JSON file with the output of the analysis.',
+        valueHelp: 'path/to/file.json',
+        defaultsTo: null,
+      );
   }
 
   void _usesExitOption() {
