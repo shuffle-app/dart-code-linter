@@ -16,7 +16,8 @@ part 'visitor.dart';
 class NoBlankLineBeforeSingleReturnRule extends DartRule {
   static const String ruleId = 'no-blank-line-before-single-return';
 
-  static const warning = 'Remove blank line before single return statement in a block.';
+  static const warning =
+      'Remove blank line before single return statement in a block.';
 
   NoBlankLineBeforeSingleReturnRule([Map<String, Object> config = const {}])
       : super(
@@ -72,10 +73,13 @@ Token _optimalToken(Token token, LineInfo lineInfo) {
   var commentToken = _latestCommentToken(token);
 
   while (commentToken != null) {
-    final commentTokenLineNumber = lineInfo.getLocation(commentToken.end).lineNumber;
-    final optimalTokenLineNumber = lineInfo.getLocation(optimalToken.offset).lineNumber;
+    final commentTokenLineNumber =
+        lineInfo.getLocation(commentToken.end).lineNumber;
+    final optimalTokenLineNumber =
+        lineInfo.getLocation(optimalToken.offset).lineNumber;
 
-    final isDirectlyPrecedingComment = commentTokenLineNumber + 1 >= optimalTokenLineNumber;
+    final isDirectlyPrecedingComment =
+        commentTokenLineNumber + 1 >= optimalTokenLineNumber;
 
     if (!isDirectlyPrecedingComment) {
       break;

@@ -29,8 +29,10 @@ void main() {
         issues: issues,
         startLines: startLines,
         startColumns: List.generate(startLines.length, (index) => 5),
-        locationTexts: List.generate(startLines.length, (index) => 'return a - 1;'),
-        messages: List.generate(startLines.length, (index) => NoBlankLineBeforeSingleReturnRule.warning),
+        locationTexts:
+            List.generate(startLines.length, (index) => 'return a - 1;'),
+        messages: List.generate(startLines.length,
+            (index) => NoBlankLineBeforeSingleReturnRule.warning),
       );
     });
   });

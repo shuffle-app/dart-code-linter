@@ -11,7 +11,9 @@ class _Visitor extends RecursiveAstVisitor<void> {
 
     final targetType = node.prefix.staticType;
 
-    if (node.identifier.name == 'first' && targetType is InterfaceType && isIterableOrSubclass(targetType)) {
+    if (node.identifier.name == 'first' &&
+        targetType is InterfaceType &&
+        isIterableOrSubclass(targetType)) {
       _expressions.add(node);
     }
   }

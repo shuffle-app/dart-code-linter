@@ -16,7 +16,8 @@ part 'visitor.dart';
 
 class PreferSingleQuotesRule extends DartRule {
   static const ruleId = 'prefer-single-quotes';
-  static const _warningMessage = 'Use single quotation marks instead of double quotations.';
+  static const _warningMessage =
+      'Use single quotation marks instead of double quotations.';
   static const _replaceComment = "Replace with ''.";
 
   PreferSingleQuotesRule([Map<String, Object> config = const {}])

@@ -133,7 +133,8 @@ final _implementedRules = <String, Rule Function(Map<String, Object>)>{
   MemberOrderingRule.ruleId: MemberOrderingRule.new,
   MissingTestAssertionRule.ruleId: MissingTestAssertionRule.new,
   NewlineBeforeReturnRule.ruleId: NewlineBeforeReturnRule.new,
-  NoBlankLineBeforeSingleReturnRule.ruleId: NoBlankLineBeforeSingleReturnRule.new,
+  NoBlankLineBeforeSingleReturnRule.ruleId:
+      NoBlankLineBeforeSingleReturnRule.new,
   PreferFirstOrNullRule.ruleId: PreferFirstOrNullRule.new,
   PreferSingleQuotesRule.ruleId: PreferSingleQuotesRule.new,
   NoBooleanLiteralCompareRule.ruleId: NoBooleanLiteralCompareRule.new,
