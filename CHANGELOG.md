@@ -1,4 +1,10 @@
 # Changelog
+## 1.2.0
+- Add fix command
+- Add prefer single quotes rule
+- Add prefer first or null rule
+- Add no blank line before single return rule
+- Fix rule avoid dynamic to extensions definition
 ## 1.1.5
 - Removed deprecated fields in analysis options and collection method
 - Fix changelog URL for update available warning
