@@ -18,7 +18,8 @@ part 'visitor.dart';
 
 class PreferFirstOrNullRule extends DartRule {
   static const ruleId = 'prefer-first-or-null';
-  static const warningMessage = 'Use firstOrNull instead of accessing the element at zero index or using first.';
+  static const warningMessage =
+      'Use firstOrNull instead of accessing the element at zero index or using first.';
   static const replaceComment = "Replace with 'firstOrNull'.";
 
   PreferFirstOrNullRule([Map<String, Object> config = const {}])
@@ -48,9 +49,13 @@ class PreferFirstOrNullRule extends DartRule {
     String replacement;
 
     if (expression is MethodInvocation) {
-      replacement = expression.isCascaded ? '..firstOrNull' : '${expression.target ?? ''}.firstOrNull';
+      replacement = expression.isCascaded
+          ? '..firstOrNull'
+          : '${expression.target ?? ''}.firstOrNull';
     } else if (expression is IndexExpression) {
-      replacement = expression.isCascaded ? '..firstOrNull' : '${expression.target ?? ''}.firstOrNull';
+      replacement = expression.isCascaded
+          ? '..firstOrNull'
+          : '${expression.target ?? ''}.firstOrNull';
     } else if (expression is PrefixedIdentifier) {
       replacement = '${expression.prefix.token.lexeme}.firstOrNull';
     } else {

@@ -79,8 +79,7 @@ void main() {
       expect(options.options, contains('dart_code_linter'));
       expect(options.options['dart_code_linter'], contains('metrics'));
       expect(
-        (options.options['dart_code_linter']
-            as Map<String, Object>)['metrics'],
+        (options.options['dart_code_linter'] as Map<String, Object>)['metrics'],
         allOf(
           containsPair('metric-id1', 10),
           containsPair('metric-id2', 30),

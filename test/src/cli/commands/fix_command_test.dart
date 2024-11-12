@@ -2,7 +2,8 @@ import 'package:dart_code_linter/src/cli/cli_runner.dart';
 import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
 
-const _usage = 'Automatically fix code issues based on lint rules and metrics.\n'
+const _usage =
+    'Automatically fix code issues based on lint rules and metrics.\n'
     '\n'
     'Usage: metrics fix [arguments] <directories>\n'
     '-h, --help                                       Print this usage information.\n'
@@ -52,7 +53,8 @@ void main() {
     test('should have correct description', () {
       expect(
         command?.description,
-        equals('Automatically fix code issues based on lint rules and metrics.'),
+        equals(
+            'Automatically fix code issues based on lint rules and metrics.'),
       );
     });
 

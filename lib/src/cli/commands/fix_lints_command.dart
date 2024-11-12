@@ -43,7 +43,8 @@ class FixCommand extends BaseCommand {
       sdkPath: findSdkPath(),
     );
 
-    _logger.progress.complete('Fixes have been applied. Preparing the results:');
+    _logger.progress
+        .complete('Fixes have been applied. Preparing the results:');
   }
 
   void _addFlags() {
@@ -95,7 +96,7 @@ class FixCommand extends BaseCommand {
         allowed: ['noted', 'warning', 'alarm'],
         valueHelp: 'warning',
         help:
-        'Set exit code 2 if code violations same or higher level than selected are detected.',
+            'Set exit code 2 if code violations same or higher level than selected are detected.',
       )
       ..addFlag(
         FlagNames.fatalStyle,
