@@ -49,6 +49,7 @@ class LintJsonReporter extends JsonReporter<LintFileReport, LintReportParams> {
     });
 
     output.write(encodedReport);
+    await output.close();
   }
 
   Map<String, Object> _lintFileReportToJson(LintFileReport report) => {
