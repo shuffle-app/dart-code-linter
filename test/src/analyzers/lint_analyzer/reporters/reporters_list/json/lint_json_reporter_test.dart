@@ -17,6 +17,7 @@ void main() {
 
     setUp(() {
       output = IOSinkMock();
+      when(output.close).thenAnswer((_) async => null);
     });
 
     test('empty report', () {
@@ -119,6 +120,7 @@ void main() {
           'violations': 2,
         }),
       );
+      verify(output.close).called(1);
     });
   });
 }
